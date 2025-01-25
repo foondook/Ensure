@@ -3,6 +3,7 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Ensure.Generator.Models;
 using Ensure.Generator.Abstractions;
+using Markdig.Extensions.Tables;
 
 namespace Ensure.Generator.Parsing;
 
@@ -14,6 +15,8 @@ public class MarkdigParser : ISpecParser
     {
         _pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
+            .UseGridTables()
+            .UsePipeTables()
             .Build();
     }
 
@@ -31,8 +34,11 @@ public class MarkdigParser : ISpecParser
         
         Scenario? currentScenario = null;
 
-        foreach (var block in blocks)
+        for (int i = 0; i < blocks.Count; i++)
         {
+            var block = blocks[i];
+            Console.WriteLine($"Processing block type: {block.GetType().Name}");
+            
             switch (block)
             {
                 case HeadingBlock h when h.Level == 2:
@@ -53,14 +59,27 @@ public class MarkdigParser : ISpecParser
                             {
                                 if (itemBlock is ParagraphBlock p)
                                 {
-                                    stepText = GetInlineText(p);
+                                    // Only take the text before any table data
+                                    stepText = GetInlineText(p).Split('|')[0].Trim();
                                     break;
                                 }
                             }
                             
                             if (!string.IsNullOrWhiteSpace(stepText))
                             {
-                                var step = new Step(stepText, ExtractParameters(stepText));
+                                Console.WriteLine($"Found step: {stepText}");
+                                
+                                // Look for a table after this step
+                                Table? associatedTable = null;
+                                var nextBlock = i < blocks.Count - 1 ? blocks[i + 1] : null;
+                                if (nextBlock is Table table)
+                                {
+                                    Console.WriteLine("Found table after step");
+                                    associatedTable = table;
+                                    i++; // Skip the table in the next iteration
+                                }
+
+                                var step = new Step(stepText, ExtractParameters(stepText, associatedTable));
                                 if (currentScenario != null)
                                 {
                                     currentScenario.Steps.Add(step);
@@ -121,5 +140,69 @@ public class MarkdigParser : ISpecParser
         }
         
         return parameters;
+    }
+
+    private Dictionary<string, string> ExtractParameters(string text, Table? table = null)
+    {
+        var parameters = ExtractParameters(text);
+        
+        if (table != null)
+        {
+            var tableData = ParseTable(table);
+            if (tableData.Any())
+            {
+                var json = System.Text.Json.JsonSerializer.Serialize(tableData);
+                Console.WriteLine($"Table data: {json}");
+                parameters["tableData"] = json;
+            }
+        }
+        
+        return parameters;
+    }
+
+    private string GetTableCellText(TableCell cell)
+    {
+        if (cell.Count == 0) return string.Empty;
+        
+        var text = string.Empty;
+        foreach (var block in cell)
+        {
+            if (block is ParagraphBlock p)
+            {
+                text += GetInlineText(p);
+            }
+        }
+        return text.Trim();
+    }
+
+    private List<Dictionary<string, string>> ParseTable(Table table)
+    {
+        var result = new List<Dictionary<string, string>>();
+        
+        // Get all rows including header
+        var rows = table.Descendants<TableRow>().ToList();
+        if (rows.Count < 2) // Need at least header and one data row
+            return result;
+
+        // Extract headers from the first row
+        var headers = rows[0].Descendants<TableCell>()
+            .Select(GetTableCellText)
+            .ToList();
+
+        // Process data rows
+        foreach (var row in rows.Skip(1))
+        {
+            var rowData = new Dictionary<string, string>();
+            var cells = row.Descendants<TableCell>().ToList();
+            
+            for (int i = 0; i < headers.Count && i < cells.Count; i++)
+            {
+                rowData[headers[i]] = GetTableCellText(cells[i]);
+            }
+            
+            result.Add(rowData);
+        }
+
+        return result;
     }
 } 
