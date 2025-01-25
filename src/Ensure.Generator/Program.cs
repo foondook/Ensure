@@ -1,16 +1,16 @@
 ﻿namespace Ensure.Generator;
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using CommandLine;
 using Ensure.Generator.Abstractions;
 using Ensure.Generator.Generation;
 using Ensure.Generator.Parsing;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
 
 public class Program
 {
@@ -56,9 +56,9 @@ public class Program
         
         Directory.CreateDirectory(opts.OutputPath);
         
-        var parser = new SimpleMarkdownParser();
+        var parser = new MarkdigParser();
         var generator = new CSharpGenerator();
-        
+
         foreach (var specFile in specFiles)
         {
             Console.WriteLine($"Processing spec file: {specFile}");
@@ -88,7 +88,7 @@ public class Program
         var words = System.Text.RegularExpressions.Regex.Split(input, @"[^\w]")
             .Where(w => !string.IsNullOrWhiteSpace(w))
             .Select(w => char.ToUpper(w[0]) + w.Substring(1).ToLower());
-            
+        
         return string.Join("", words);
     }
 }

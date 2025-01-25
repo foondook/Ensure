@@ -9,67 +9,63 @@ public class SimpleMarkdownParser : ISpecParser
     public Spec Parse(string content)
     {
         var lines = content.Split('\n');
-        
-        var name = "";
+        var specName = string.Empty;
+        var background = new List<Step>();
         var scenarios = new List<Scenario>();
-        var backgroundSteps = new List<Step>();
+        
         Scenario? currentScenario = null;
-        var steps = new List<Step>();
-        var parsingBackground = true;
-
-        foreach (var line in lines.Select(l => l.Trim()))
+        
+        foreach (var line in lines)
         {
-            if (string.IsNullOrWhiteSpace(line)) continue;
+            var trimmedLine = line.Trim();
+            
+            // Skip empty lines and table lines (lines containing |)
+            if (string.IsNullOrWhiteSpace(trimmedLine) || trimmedLine.Contains('|'))
+                continue;
 
-            if (line.StartsWith("#") && !line.StartsWith("##"))
+            if (trimmedLine.StartsWith("# "))
             {
-                name = line.TrimStart('#', ' ');
+                specName = trimmedLine[2..].Trim();
             }
-            else if (line.StartsWith("##"))
+            else if (trimmedLine.StartsWith("## "))
             {
-                parsingBackground = false;
                 if (currentScenario != null)
                 {
-                    scenarios.Add(currentScenario with { Steps = steps.ToList() });
+                    scenarios.Add(currentScenario);
                 }
-                
-                var scenarioName = line.TrimStart('#', ' ');
-                currentScenario = new Scenario(scenarioName, new List<Step>());
-                steps = new List<Step>();
+                currentScenario = new Scenario(trimmedLine[3..].Trim(), new List<Step>());
             }
-            else if (line.StartsWith("*"))
+            else if (!string.IsNullOrWhiteSpace(trimmedLine))
             {
-                var stepText = line.TrimStart('*', ' ');
-                var parameters = ExtractParameters(stepText);
-                var step = new Step(stepText, parameters);
-                
-                if (parsingBackground)
+                var step = new Step(trimmedLine, ExtractParameters(trimmedLine));
+                if (currentScenario != null)
                 {
-                    backgroundSteps.Add(step);
+                    currentScenario.Steps.Add(step);
                 }
-                else if (currentScenario != null)
+                else
                 {
-                    steps.Add(step);
+                    background.Add(step);
                 }
             }
         }
 
         if (currentScenario != null)
         {
-            scenarios.Add(currentScenario with { Steps = steps });
+            scenarios.Add(currentScenario);
         }
 
-        return new Spec(name, backgroundSteps, scenarios);
+        return new Spec(specName, background, scenarios);
     }
 
-    private static Dictionary<string, string> ExtractParameters(string stepText)
+    private Dictionary<string, string> ExtractParameters(string text)
     {
         var parameters = new Dictionary<string, string>();
-        var matches = Regex.Matches(stepText, "\"([^\"]*)\"");
+        var matches = System.Text.RegularExpressions.Regex.Matches(text, @"<([^>]+)>");
         
-        for (int i = 0; i < matches.Count; i++)
+        foreach (System.Text.RegularExpressions.Match match in matches)
         {
-            parameters[$"param{i + 1}"] = matches[i].Groups[1].Value;
+            var value = match.Groups[1].Value;
+            parameters[value] = value;
         }
         
         return parameters;
