@@ -117,7 +117,19 @@ namespace {namespaceName}
             // Add table parameter if present
             if (step.Parameters.TryGetValue("tableData", out var tableJson))
             {
-                parameters.Add($"JsonSerializer.Deserialize<List<Dictionary<string, string>>>(\"{tableJson.Replace("\"", "\\\"")}\")");
+                var tableData = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(tableJson);
+                if (tableData != null && tableData.Any())
+                {
+                    var tableInit = new StringBuilder("new()\n            {\n");
+                    foreach (var row in tableData)
+                    {
+                        tableInit.Append("                new() { ");
+                        tableInit.Append(string.Join(", ", row.Select(kvp => $"[\"{kvp.Key}\"] = \"{kvp.Value}\"")));
+                        tableInit.AppendLine(" },");
+                    }
+                    tableInit.Append("            }");
+                    parameters.Add(tableInit.ToString());
+                }
             }
             
             var parameterList = string.Join(", ", parameters);
