@@ -55,13 +55,19 @@ public class MarkdigParser : ISpecParser
                         if (item is ListItemBlock listItem)
                         {
                             var stepText = string.Empty;
+                            Table? associatedTable = null;
+
                             foreach (var itemBlock in listItem)
                             {
                                 if (itemBlock is ParagraphBlock p)
                                 {
                                     // Only take the text before any table data
                                     stepText = GetInlineText(p).Split('|')[0].Trim();
-                                    break;
+                                }
+                                else if (itemBlock is Table table)
+                                {
+                                    Console.WriteLine("Found table within list item");
+                                    associatedTable = table;
                                 }
                             }
                             
@@ -69,14 +75,16 @@ public class MarkdigParser : ISpecParser
                             {
                                 Console.WriteLine($"Found step: {stepText}");
                                 
-                                // Look for a table after this step
-                                Table? associatedTable = null;
-                                var nextBlock = i < blocks.Count - 1 ? blocks[i + 1] : null;
-                                if (nextBlock is Table table)
+                                // If no table was found within the list item, look for one after it
+                                if (associatedTable == null)
                                 {
-                                    Console.WriteLine("Found table after step");
-                                    associatedTable = table;
-                                    i++; // Skip the table in the next iteration
+                                    var nextBlock = i < blocks.Count - 1 ? blocks[i + 1] : null;
+                                    if (nextBlock is Table table)
+                                    {
+                                        Console.WriteLine("Found table after step");
+                                        associatedTable = table;
+                                        i++; // Skip the table in the next iteration
+                                    }
                                 }
 
                                 var step = new Step(stepText, ExtractParameters(stepText, associatedTable));
