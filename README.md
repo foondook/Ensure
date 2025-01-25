@@ -2,6 +2,11 @@
 
 A .NET tool for generating test code from specification files.
 
+[![NuGet](https://img.shields.io/nuget/v/Ensure.Generator.svg)](https://www.nuget.org/packages/Ensure.Generator)
+[![NuGet](https://img.shields.io/nuget/dt/Ensure.Generator.svg)](https://www.nuget.org/packages/Ensure.Generator)
+[![License](https://img.shields.io/github/license/foondook/ensure)](LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-9.0-512BD4)](https://www.nuget.org/packages/Ensure.Generator)
+
 Inspired by [SpecFlow](https://specflow.org/) and [Gauge](https://gauge.org/), but with a focus on simplicity and modern .NET features. While SpecFlow and Gauge are full-featured BDD frameworks, Ensure.Generator takes a lightweight approach by focusing solely on generating clean, typed test code from markdown specifications.
 
 ## Why Executable Specifications?
