@@ -144,7 +144,7 @@ namespace {namespaceName}
 
         foreach (var scenario in spec.Scenarios)
         {
-            GenerateScenarioTest(builder, scenario);
+            GenerateScenarioTest(builder, scenario, spec.Background);
         }
 
         builder.AppendLine("    }");
@@ -163,7 +163,7 @@ namespace {namespaceName}
         return string.Join("", words.Select(w => char.ToUpper(w[0]) + w.Substring(1).ToLower()));
     }
 
-    private record Spec(string Name, List<Scenario> Scenarios);
+    private record Spec(string Name, List<Step> Background, List<Scenario> Scenarios);
     private record Scenario(string Name, List<Step> Steps);
     private record Step(string Text, Dictionary<string, string> Parameters);
 
@@ -174,8 +174,10 @@ namespace {namespaceName}
         
         var name = "";
         var scenarios = new List<Scenario>();
+        var backgroundSteps = new List<Step>();
         Scenario? currentScenario = null;
         var steps = new List<Step>();
+        var parsingBackground = true;
 
         foreach (var line in lines.Select(l => l.Trim()))
         {
@@ -187,6 +189,7 @@ namespace {namespaceName}
             }
             else if (line.StartsWith("##"))
             {
+                parsingBackground = false;
                 if (currentScenario != null)
                 {
                     scenarios.Add(currentScenario with { Steps = steps.ToList() });
@@ -196,11 +199,20 @@ namespace {namespaceName}
                 currentScenario = new Scenario(scenarioName, new List<Step>());
                 steps = new List<Step>();
             }
-            else if (line.StartsWith("*") && currentScenario != null)
+            else if (line.StartsWith("*"))
             {
                 var stepText = line.TrimStart('*', ' ');
                 var parameters = ExtractParameters(stepText);
-                steps.Add(new Step(stepText, parameters));
+                var step = new Step(stepText, parameters);
+                
+                if (parsingBackground)
+                {
+                    backgroundSteps.Add(step);
+                }
+                else if (currentScenario != null)
+                {
+                    steps.Add(step);
+                }
             }
         }
 
@@ -209,7 +221,7 @@ namespace {namespaceName}
             scenarios.Add(currentScenario with { Steps = steps });
         }
 
-        return new Spec(name, scenarios);
+        return new Spec(name, backgroundSteps, scenarios);
     }
 
     private static Dictionary<string, string> ExtractParameters(string stepText)
@@ -225,7 +237,7 @@ namespace {namespaceName}
         return parameters;
     }
 
-    private static void GenerateScenarioTest(StringBuilder builder, Scenario scenario)
+    private static void GenerateScenarioTest(StringBuilder builder, Scenario scenario, List<Step> backgroundSteps)
     {
         var testName = ToValidIdentifier(scenario.Name);
 
@@ -234,6 +246,15 @@ namespace {namespaceName}
         public async Task {testName}()
         {{");
 
+        // First run background steps
+        foreach (var step in backgroundSteps)
+        {
+            var methodName = ToValidMethodName(step.Text);
+            var parameters = string.Join(", ", step.Parameters.Values.Select(v => $"\"{v}\""));
+            builder.AppendLine($"            await Steps.{methodName}({parameters});");
+        }
+
+        // Then run scenario steps
         foreach (var step in scenario.Steps)
         {
             var methodName = ToValidMethodName(step.Text);

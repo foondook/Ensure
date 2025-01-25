@@ -1,5 +1,9 @@
 # User Authentication
 
+* Navigate to "login" page
+* Clear browser cookies
+* Initialize test database
+
 ## User can login successfully
 * Enter username "john.doe@example.com"
 * Enter password "securePass123"

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Ensure.Examples.Generated
+namespace Ensure.Examples
 {
     public abstract class UserAuthenticationTestsBase
     {
@@ -12,6 +12,9 @@ namespace Ensure.Examples.Generated
         [Fact]
         public async Task UserCanLoginSuccessfully()
         {
+            await Steps.NavigateToPage("login");
+            await Steps.ClearBrowserCookies();
+            await Steps.InitializeTestDatabase();
             await Steps.EnterUsername("john.doe@example.com");
             await Steps.EnterPassword("securePass123");
             await Steps.ClickLoginButton();
@@ -22,6 +25,9 @@ namespace Ensure.Examples.Generated
         [Fact]
         public async Task LoginFailsWithInvalidCredentials()
         {
+            await Steps.NavigateToPage("login");
+            await Steps.ClearBrowserCookies();
+            await Steps.InitializeTestDatabase();
             await Steps.EnterUsername("john.doe@example.com");
             await Steps.EnterPassword("wrongpass");
             await Steps.ClickLoginButton();

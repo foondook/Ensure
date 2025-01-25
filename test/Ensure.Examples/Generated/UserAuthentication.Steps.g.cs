@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Ensure.Examples.Generated
+namespace Ensure.Examples
 {
     public abstract class UserAuthenticationStepsBase
     {
