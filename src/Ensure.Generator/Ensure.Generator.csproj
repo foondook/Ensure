@@ -7,9 +7,32 @@
     <ToolCommandName>ensure</ToolCommandName>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
+    
+    <!-- Package Metadata -->
+    <PackageId>Ensure.Generator</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Vitalii Moiseenko</Authors>
+    <Company>Vitalii Moiseenko</Company>
+    <Description>A .NET tool for generating test code from markdown specification files.</Description>
+    <PackageTags>testing;code-generation;bdd;markdown;gherkin;specification</PackageTags>
+    <PackageProjectUrl>https://github.com/foondook/ensure</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/foondook/ensure</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+    <!-- Build Configuration -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
