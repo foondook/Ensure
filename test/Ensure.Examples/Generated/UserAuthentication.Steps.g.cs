@@ -4,61 +4,36 @@ using System.Threading.Tasks;
 
 namespace Ensure.Examples.Generated
 {
-    public class UserAuthenticationSteps
+    public abstract class UserAuthenticationStepsBase
     {
-        private readonly TestContext _context;
 
-        public UserAuthenticationSteps()
-        {
-            _context = new TestContext();
-        }
-
-        public async Task SetUpTestEnvironment()
-        {
-            await _context.Initialize();
-        }
-
-
-        public async Task EnterUsernameAsync(string param1)
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Enter username "john.doe@example.com"");
-        }
-
-        public async Task EnterPasswordAsync(string param1)
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Enter password "securePass123"");
-        }
-
-        public async Task ClickLoginButtonAsync()
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Click login button");
-        }
-
-        public async Task VerifyUserIsRedirectedToAsync(string param1)
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Verify user is redirected to "dashboard"");
-        }
-
-        public async Task VerifyWelcomeMessageShowsAsync(string param1)
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Verify welcome message shows "Welcome, John Doe"");
-        }
-
-        public async Task VerifyErrorMessageAsync(string param1)
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Verify error message "Invalid credentials"");
-        }
-
-        public async Task VerifyUserRemainsOnPageAsync(string param1)
-        {
-            // TODO: Implement step logic
-            throw new NotImplementedException($"Step not implemented: Verify user remains on "login" page");
-        }
+        /// <summary>
+        /// Enter username \"john.doe@example.com\"
+        /// </summary>
+        public abstract Task EnterUsername(string param1);
+        /// <summary>
+        /// Enter password \"securePass123\"
+        /// </summary>
+        public abstract Task EnterPassword(string param1);
+        /// <summary>
+        /// Click login button
+        /// </summary>
+        public abstract Task ClickLoginButton();
+        /// <summary>
+        /// Verify user is redirected to \"dashboard\"
+        /// </summary>
+        public abstract Task VerifyUserIsRedirectedTo(string param1);
+        /// <summary>
+        /// Verify welcome message shows \"Welcome, John Doe\"
+        /// </summary>
+        public abstract Task VerifyWelcomeMessageShows(string param1);
+        /// <summary>
+        /// Verify error message \"Invalid credentials\"
+        /// </summary>
+        public abstract Task VerifyErrorMessage(string param1);
+        /// <summary>
+        /// Verify user remains on \"login\" page
+        /// </summary>
+        public abstract Task VerifyUserRemainsOnPage(string param1);
     }
 }

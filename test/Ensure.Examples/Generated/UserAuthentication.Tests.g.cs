@@ -4,50 +4,29 @@ using Xunit;
 
 namespace Ensure.Examples.Generated
 {
-    public class UserAuthenticationTests
+    public abstract class UserAuthenticationTestsBase
     {
-        private readonly UserAuthenticationSteps _steps;
-
-        public UserAuthenticationTests()
-        {
-            _steps = new UserAuthenticationSteps();
-        }
+        protected abstract UserAuthenticationStepsBase Steps { get; }
 
 
         [Fact]
         public async Task UserCanLoginSuccessfully()
         {
-            // Arrange
-            await _steps.SetUpTestEnvironment();
-
-            // Enter username "john.doe@example.com"
-            await _steps.EnterUsernameAsync("john.doe@example.com");
-            // Enter password "securePass123"
-            await _steps.EnterPasswordAsync("securePass123");
-            // Click login button
-            await _steps.ClickLoginButtonAsync();
-            // Verify user is redirected to "dashboard"
-            await _steps.VerifyUserIsRedirectedToAsync("dashboard");
-            // Verify welcome message shows "Welcome, John Doe"
-            await _steps.VerifyWelcomeMessageShowsAsync("Welcome, John Doe");
+            await Steps.EnterUsername("john.doe@example.com");
+            await Steps.EnterPassword("securePass123");
+            await Steps.ClickLoginButton();
+            await Steps.VerifyUserIsRedirectedTo("dashboard");
+            await Steps.VerifyWelcomeMessageShows("Welcome, John Doe");
         }
 
         [Fact]
         public async Task LoginFailsWithInvalidCredentials()
         {
-            // Arrange
-            await _steps.SetUpTestEnvironment();
-
-            // Enter username "john.doe@example.com"
-            await _steps.EnterUsernameAsync("john.doe@example.com");
-            // Enter password "wrongpass"
-            await _steps.EnterPasswordAsync("wrongpass");
-            // Click login button
-            await _steps.ClickLoginButtonAsync();
-            // Verify error message "Invalid credentials"
-            await _steps.VerifyErrorMessageAsync("Invalid credentials");
-            // Verify user remains on "login" page
-            await _steps.VerifyUserRemainsOnPageAsync("login");
+            await Steps.EnterUsername("john.doe@example.com");
+            await Steps.EnterPassword("wrongpass");
+            await Steps.ClickLoginButton();
+            await Steps.VerifyErrorMessage("Invalid credentials");
+            await Steps.VerifyUserRemainsOnPage("login");
         }
     }
 }
