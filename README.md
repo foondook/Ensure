@@ -2,6 +2,12 @@
 
 A .NET tool for generating test code from specification files.
 
+Inspired by [SpecFlow](https://specflow.org/) and [Gauge](https://gauge.org/), but with a focus on simplicity and modern .NET features. While SpecFlow and Gauge are full-featured BDD frameworks, Ensure.Generator takes a lightweight approach by focusing solely on generating clean, typed test code from markdown specifications.
+
+## Why Executable Specifications?
+
+In today's rapidly evolving software landscape, acceptance tests and executable specifications are becoming increasingly crucial. They serve as living documentation that evolves with your codebase, ensuring that your tests always reflect the current business requirements. Learn more about why this approach is gaining traction in this [detailed overview video](https://youtu.be/NsOUKfzyZiU).
+
 ## Installation
 
 ```bash
