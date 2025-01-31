@@ -1,6 +1,6 @@
 ﻿// Generated code - do not modify
 
-export abstract class LoginFeatureBase {
+export abstract class LoginFeatureStepsBase {
     /**
      * Navigate to \"login\" page
      */

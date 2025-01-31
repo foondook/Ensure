@@ -1,6 +1,6 @@
 ﻿// Generated code - do not modify
 
-export abstract class UserDataBase {
+export abstract class UserDataStepsBase {
     /**
      * Validate users data
      */

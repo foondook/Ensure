@@ -57,13 +57,15 @@ public class TypeScriptGenerator : ICodeGenerator
     public string GenerateTests(Spec spec, string namespaceName, string className)
     {
         var builder = new StringBuilder();
+        var baseClassName = className.EndsWith("Tests") ? className : $"{className}Tests";
+        var stepsClassName = className.Replace("Tests", "");
         
         builder.AppendLine("// Generated code - do not modify");
         builder.AppendLine("import { test, expect } from '@playwright/test';");
-        builder.AppendLine($"import {{ {className}Base }} from './{className}.steps';\n");
+        builder.AppendLine($"import {{ {stepsClassName}Base }} from './{stepsClassName}.steps';\n");
 
-        builder.AppendLine($"export abstract class {className}TestsBase {{");
-        builder.AppendLine($"    protected abstract getSteps(page: Page): {className}Base;\n");
+        builder.AppendLine($"export abstract class {baseClassName}Base {{");
+        builder.AppendLine($"    protected abstract getSteps(page: Page): {stepsClassName}StepsBase;\n");
 
         foreach (var scenario in spec.Scenarios)
         {

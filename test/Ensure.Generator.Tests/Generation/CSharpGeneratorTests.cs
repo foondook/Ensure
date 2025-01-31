@@ -30,7 +30,7 @@ public class CSharpGeneratorTests
         );
 
         // Act
-        var result = _generator.GenerateSteps(spec, "TestNamespace", "LoginFeature");
+        var result = _generator.GenerateSteps(spec, "TestNamespace", "LoginFeatureSteps");
 
         // Assert
         return Verify(result);
@@ -57,7 +57,7 @@ public class CSharpGeneratorTests
         );
 
         // Act
-        var result = _generator.GenerateTests(spec, "TestNamespace", "LoginFeature");
+        var result = _generator.GenerateTests(spec, "TestNamespace", "LoginFeatureTests");
 
         // Assert
         return Verify(result);
@@ -84,7 +84,7 @@ public class CSharpGeneratorTests
         );
 
         // Act
-        var result = _generator.GenerateSteps(spec, "TestNamespace", "UserData");
+        var result = _generator.GenerateSteps(spec, "TestNamespace", "UserDataSteps");
 
         // Assert
         return Verify(result);
