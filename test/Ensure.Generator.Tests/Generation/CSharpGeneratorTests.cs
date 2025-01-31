@@ -1,5 +1,7 @@
 using Ensure.Generator.Generation;
 using Ensure.Generator.Models;
+using VerifyXunit;
+using VerifyTests;
 
 namespace Ensure.Generator.Tests;
 
@@ -8,7 +10,7 @@ public class CSharpGeneratorTests
     private readonly CSharpGenerator _generator = new();
 
     [Fact]
-    public void GenerateSteps_WithSimpleSpec_GeneratesCorrectOutput()
+    public Task GenerateSteps_WithSimpleSpec_GeneratesCorrectOutput()
     {
         // Arrange
         var step = new Step(
@@ -31,14 +33,11 @@ public class CSharpGeneratorTests
         var result = _generator.GenerateSteps(spec, "TestNamespace", "LoginFeature");
 
         // Assert
-        Assert.Contains("namespace TestNamespace", result);
-        Assert.Contains("public abstract class LoginFeatureBase", result);
-        Assert.Contains("public abstract Task NavigateToPage(string param1);", result);
-        Assert.Contains("/// Navigate to \\\"login\\\" page", result);
+        return Verify(result);
     }
 
     [Fact]
-    public void GenerateTests_WithSimpleSpec_GeneratesCorrectOutput()
+    public Task GenerateTests_WithSimpleSpec_GeneratesCorrectOutput()
     {
         // Arrange
         var step = new Step(
@@ -61,15 +60,11 @@ public class CSharpGeneratorTests
         var result = _generator.GenerateTests(spec, "TestNamespace", "LoginFeature");
 
         // Assert
-        Assert.Contains("namespace TestNamespace", result);
-        Assert.Contains("public abstract class LoginFeatureTestsBase", result);
-        Assert.Contains("[Fact]", result);
-        Assert.Contains("public async Task SuccessfulLogin()", result);
-        Assert.Contains("await Steps.NavigateToPage(\"login\");", result);
+        return Verify(result);
     }
 
     [Fact]
-    public void GenerateSteps_WithTableData_GeneratesCorrectOutput()
+    public Task GenerateSteps_WithTableData_GeneratesCorrectOutput()
     {
         // Arrange
         var step = new Step(
@@ -92,7 +87,6 @@ public class CSharpGeneratorTests
         var result = _generator.GenerateSteps(spec, "TestNamespace", "UserData");
 
         // Assert
-        Assert.Contains("List<Dictionary<string, string>> tableData", result);
-        Assert.Contains("public abstract Task ValidateUsersData(List<Dictionary<string, string>> tableData);", result);
+        return Verify(result);
     }
 } 

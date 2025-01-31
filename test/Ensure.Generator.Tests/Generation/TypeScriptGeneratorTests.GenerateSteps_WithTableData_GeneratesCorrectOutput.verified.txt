@@ -1,0 +1,9 @@
+﻿// Generated code - do not modify
+
+export abstract class UserDataBase {
+    /**
+     * Validate users data
+     */
+    abstract validateUsersData(tableData: Array<Record<string, string>>): Promise<void>;
+
+}

@@ -1,0 +1,9 @@
+﻿// Generated code - do not modify
+
+export abstract class LoginFeatureBase {
+    /**
+     * Navigate to \"login\" page
+     */
+    abstract navigateToPage(param1: string): Promise<void>;
+
+}

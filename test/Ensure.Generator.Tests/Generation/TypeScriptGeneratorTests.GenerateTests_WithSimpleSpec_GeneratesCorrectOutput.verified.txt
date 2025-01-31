@@ -1,0 +1,14 @@
+﻿// Generated code - do not modify
+import { test, expect } from '@playwright/test';
+import { LoginFeatureBase } from './LoginFeature.steps';
+
+export abstract class LoginFeatureTestsBase {
+    protected abstract getSteps(page: Page): LoginFeatureBase;
+
+    test('Successful Login', async ({ page }) => {
+        const steps = this.getSteps(page);
+
+        await steps.navigateToPage('login');
+    });
+
+}

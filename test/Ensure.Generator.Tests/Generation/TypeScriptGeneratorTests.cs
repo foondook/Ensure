@@ -1,5 +1,7 @@
 using Ensure.Generator.Generation;
 using Ensure.Generator.Models;
+using VerifyXunit;
+using VerifyTests;
 
 namespace Ensure.Generator.Tests;
 
@@ -8,7 +10,7 @@ public class TypeScriptGeneratorTests
     private readonly TypeScriptGenerator _generator = new();
 
     [Fact]
-    public void GenerateSteps_WithSimpleSpec_GeneratesCorrectOutput()
+    public Task GenerateSteps_WithSimpleSpec_GeneratesCorrectOutput()
     {
         // Arrange
         var step = new Step(
@@ -31,13 +33,11 @@ public class TypeScriptGeneratorTests
         var result = _generator.GenerateSteps(spec, "TestNamespace", "LoginFeature");
 
         // Assert
-        Assert.Contains("export abstract class LoginFeatureBase", result);
-        Assert.Contains("abstract navigateToPage(param1: string): Promise<void>;", result);
-        Assert.Contains("* Navigate to \\\"login\\\" page", result);
+        return Verify(result);
     }
 
     [Fact]
-    public void GenerateTests_WithSimpleSpec_GeneratesCorrectOutput()
+    public Task GenerateTests_WithSimpleSpec_GeneratesCorrectOutput()
     {
         // Arrange
         var step = new Step(
@@ -60,15 +60,11 @@ public class TypeScriptGeneratorTests
         var result = _generator.GenerateTests(spec, "TestNamespace", "LoginFeature");
 
         // Assert
-        Assert.Contains("import { test, expect } from '@playwright/test';", result);
-        Assert.Contains("export abstract class LoginFeatureTestsBase", result);
-        Assert.Contains("protected abstract getSteps(page: Page): LoginFeatureBase;", result);
-        Assert.Contains("test('Successful Login', async ({ page }) => {", result);
-        Assert.Contains("await steps.navigateToPage('login');", result);
+        return Verify(result);
     }
 
     [Fact]
-    public void GenerateSteps_WithTableData_GeneratesCorrectOutput()
+    public Task GenerateSteps_WithTableData_GeneratesCorrectOutput()
     {
         // Arrange
         var step = new Step(
@@ -91,6 +87,6 @@ public class TypeScriptGeneratorTests
         var result = _generator.GenerateSteps(spec, "TestNamespace", "UserData");
 
         // Assert
-        Assert.Contains("abstract validateUsersData(tableData: Array<Record<string, string>>): Promise<void>;", result);
+        return Verify(result);
     }
 } 
