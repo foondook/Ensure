@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Xunit;
 
-namespace Ensure.Examples
+namespace Ensure.Examples.xUnit
 {
     public abstract class BackgroundTableTestTestsBase
     {

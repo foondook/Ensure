@@ -1,27 +1,28 @@
 // Generated code - do not modify
-import { LoginFeatureBase } from './LoginFeature.steps';
+import { test, expect, Page } from '@playwright/test';
+import { LoginFeatureStepsBase } from './LoginFeature.steps';
 
 export abstract class LoginFeatureTestsBase {
-    protected abstract getSteps(): LoginFeatureBase;
+    protected abstract getSteps(page: Page): LoginFeatureStepsBase;
 
-    async successfulLogin() {
-        const steps = this.getSteps();
+    test('Successful Login', async ({ page }) => {
+        const steps = this.getSteps(page);
 
         await steps.navigateTo('/login');
         await steps.enterIntoField('test@example.com', 'email');
         await steps.enterIntoField('password123', 'password');
         await steps.clickButton('Sign In');
         await steps.verifyTextIsShown('Welcome back');
-    }
+    });
 
-    async invalidCredentials() {
-        const steps = this.getSteps();
+    test('Invalid Credentials', async ({ page }) => {
+        const steps = this.getSteps(page);
 
         await steps.navigateTo('/login');
         await steps.enterIntoField('wrong@example.com', 'email');
         await steps.enterIntoField('wrongpass', 'password');
         await steps.clickButton('Sign In');
         await steps.verifyTextIsShown('Invalid credentials');
-    }
+    });
 
 }

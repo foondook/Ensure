@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Ensure.Examples
+namespace Ensure.Examples.xUnit
 {
     public abstract class UserAuthenticationStepsBase
     {

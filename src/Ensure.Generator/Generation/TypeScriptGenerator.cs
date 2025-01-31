@@ -57,13 +57,13 @@ public class TypeScriptGenerator : ICodeGenerator
     public string GenerateTests(Spec spec, string namespaceName, string className)
     {
         var builder = new StringBuilder();
-        var baseClassName = $"{className}TestsBase";
         
         builder.AppendLine("// Generated code - do not modify");
+        builder.AppendLine("import { test, expect } from '@playwright/test';");
         builder.AppendLine($"import {{ {className}Base }} from './{className}.steps';\n");
 
-        builder.AppendLine($"export abstract class {baseClassName} {{");
-        builder.AppendLine($"    protected abstract getSteps(): {className}Base;\n");
+        builder.AppendLine($"export abstract class {className}TestsBase {{");
+        builder.AppendLine($"    protected abstract getSteps(page: Page): {className}Base;\n");
 
         foreach (var scenario in spec.Scenarios)
         {
@@ -78,8 +78,8 @@ public class TypeScriptGenerator : ICodeGenerator
     {
         var testName = ToValidMethodName(scenario.Name);
 
-        builder.AppendLine($"    async {testName}() {{");
-        builder.AppendLine("        const steps = this.getSteps();\n");
+        builder.AppendLine($"    test('{scenario.Name}', async ({{ page }}) => {{");
+        builder.AppendLine("        const steps = this.getSteps(page);\n");
 
         void WriteStepCall(Step step)
         {
@@ -113,7 +113,7 @@ public class TypeScriptGenerator : ICodeGenerator
             WriteStepCall(step);
         }
 
-        builder.AppendLine("    }\n");
+        builder.AppendLine("    });\n");
     }
 
     private string ToValidMethodName(string stepText)
