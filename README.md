@@ -73,7 +73,7 @@ ensure typescript -s path/to/specs -o path/to/output
 
 The tool generates both test classes and step definitions in C# or TypeScript.
 
-### C# Generated Code
+### C# Generated Code (xUnit)
 
 ```csharp
 // Generated Steps Base Class
@@ -119,11 +119,11 @@ public abstract class LoginFeatureTestsBase
 }
 ```
 
-### TypeScript Generated Code
+### TypeScript Generated Code (Playwright)
 
 ```typescript
 // Generated Steps Base Class
-export abstract class LoginFeatureBase {
+export abstract class LoginFeatureStepsBase {
     /**
      * Navigate to "/login"
      */
@@ -143,23 +143,21 @@ export abstract class LoginFeatureBase {
      * Verify text "Welcome back" is shown
      */
     abstract verifyTextIsShown(param1: string): Promise<void>;
-
-    // ... other step definitions
 }
 
 // Generated Tests Base Class
 export abstract class LoginFeatureTestsBase {
-    protected abstract getSteps(): LoginFeatureBase;
+    protected abstract getSteps(page: Page): LoginFeatureStepsBase;
 
-    async successfulLogin() {
-        const steps = this.getSteps();
+    test('Successful Login', async ({ page }) => {
+        const steps = this.getSteps(page);
 
         await steps.navigateTo('/login');
         await steps.enterIntoField('test@example.com', 'email');
         await steps.enterIntoField('password123', 'password');
         await steps.clickButton('Sign In');
         await steps.verifyTextIsShown('Welcome back');
-    }
+    });
 
     // ... other test methods
 }
@@ -167,7 +165,7 @@ export abstract class LoginFeatureTestsBase {
 
 To implement the tests, create concrete classes that inherit from the generated base classes:
 
-### C# Implementation
+### C# Implementation (xUnit)
 
 ```csharp
 public class LoginFeatureTests : LoginFeatureTestsBase
@@ -199,10 +197,14 @@ public class LoginFeatureSteps : LoginFeatureStepsBase
 }
 ```
 
-### TypeScript Implementation
+### TypeScript Implementation (Playwright)
 
 ```typescript
-class LoginFeatureSteps extends LoginFeatureBase {
+class LoginFeatureSteps extends LoginFeatureStepsBase {
+    constructor(private page: Page) {
+        super();
+    }
+
     async navigateTo(url: string): Promise<void> {
         // Your implementation here
     }
@@ -220,9 +222,9 @@ class LoginFeatureSteps extends LoginFeatureBase {
     }
 }
 
-class LoginFeatureTests extends LoginFeatureTestsBase {
-    protected getSteps(): LoginFeatureBase {
-        return new LoginFeatureSteps();
+export class LoginFeatureTests extends LoginFeatureTestsBase {
+    protected getSteps(page: Page): LoginFeatureStepsBase {
+        return new LoginFeatureSteps(page);
     }
 }
 ```
@@ -230,12 +232,14 @@ class LoginFeatureTests extends LoginFeatureTestsBase {
 ## Features
 
 - Generates test code from markdown specification files
-- Supports both C# and TypeScript output
+- Supports both C# (xUnit) and TypeScript (Playwright) output
 - Clean, typed step definitions
 - Simple bullet-point style steps
 - Table-driven test scenarios
 - Automatic parameter extraction from quoted strings
 - No Gherkin/Cucumber syntax - just plain English
+- First-class Playwright support for TypeScript output
+- Proper namespace handling for C# output
 
 ## License
 

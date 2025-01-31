@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -10,7 +11,7 @@
     
     <!-- Package Metadata -->
     <PackageId>Ensure.Generator</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <Authors>Vitalii Moiseenko</Authors>
     <Company>Vitalii Moiseenko</Company>
     <Description>A .NET tool for generating test code from markdown specification files.</Description>
