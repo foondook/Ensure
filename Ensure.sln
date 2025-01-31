@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensure.Generator", "src\Ens
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8546084C-82BF-4330-9C8A-135452B6BACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensure.Examples", "test\Ensure.Examples\Ensure.Examples.csproj", "{66F7A06C-5A5B-417D-86B6-55B4780CADE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ensure.Generator.Tests", "test\Ensure.Generator.Tests\Ensure.Generator.Tests.csproj", "{66F7A06C-5A5B-417D-86B6-55B4780CADE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
