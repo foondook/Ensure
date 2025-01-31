@@ -1,0 +1,13 @@
+{
+  "name": "ensure-playwright-sample",
+  "version": "1.0.0",
+  "description": "Sample Playwright project using Ensure generator",
+  "scripts": {
+    "test": "playwright test",
+    "generate": "dotnet ensure typescript"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1",
+    "@types/node": "^20.11.24"
+  }
+} 

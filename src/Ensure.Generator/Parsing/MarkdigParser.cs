@@ -73,32 +73,15 @@ public class MarkdigParser : ISpecParser
                             
                             if (!string.IsNullOrWhiteSpace(stepText))
                             {
-                                Console.WriteLine($"Found step: {stepText}");
-                                
-                                // If no table was found within the list item, look for one after it
-                                if (associatedTable == null)
-                                {
-                                    var nextBlock = i < blocks.Count - 1 ? blocks[i + 1] : null;
-                                    if (nextBlock is Table table)
-                                    {
-                                        Console.WriteLine("Found table after step");
-                                        associatedTable = table;
-                                        i++; // Skip the table in the next iteration
-                                    }
-                                }
-
-                                var step = new Step(stepText, ExtractParameters(stepText, associatedTable));
-                                if (currentScenario != null)
-                                {
-                                    currentScenario.Steps.Add(step);
-                                }
-                                else
-                                {
-                                    background.Add(step);
-                                }
+                                ProcessStep(stepText, associatedTable, currentScenario, background, ref i, blocks);
                             }
                         }
                     }
+                    break;
+
+                case ParagraphBlock p:
+                    var text = GetInlineText(p);
+                    ProcessStep(text, null, currentScenario, background, ref i, blocks);
                     break;
             }
         }
@@ -212,5 +195,32 @@ public class MarkdigParser : ISpecParser
         }
 
         return result;
+    }
+
+    private void ProcessStep(string stepText, Table? associatedTable, Scenario? currentScenario, List<Step> background, ref int blockIndex, List<Block> blocks)
+    {
+        Console.WriteLine($"Found step: {stepText}");
+        
+        // If no table was found within the list item, look for one after it
+        if (associatedTable == null)
+        {
+            var nextBlock = blockIndex < blocks.Count - 1 ? blocks[blockIndex + 1] : null;
+            if (nextBlock is Table table)
+            {
+                Console.WriteLine("Found table after step");
+                associatedTable = table;
+                blockIndex++; // Skip the table in the next iteration
+            }
+        }
+
+        var step = new Step(stepText, ExtractParameters(stepText, associatedTable));
+        if (currentScenario != null)
+        {
+            currentScenario.Steps.Add(step);
+        }
+        else
+        {
+            background.Add(step);
+        }
     }
 } 

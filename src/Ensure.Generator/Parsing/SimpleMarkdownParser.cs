@@ -60,12 +60,12 @@ public class SimpleMarkdownParser : ISpecParser
     private Dictionary<string, string> ExtractParameters(string text)
     {
         var parameters = new Dictionary<string, string>();
-        var matches = System.Text.RegularExpressions.Regex.Matches(text, @"<([^>]+)>");
+        var matches = System.Text.RegularExpressions.Regex.Matches(text, @"""([^""]+)""");
         
-        foreach (System.Text.RegularExpressions.Match match in matches)
+        for (int i = 0; i < matches.Count; i++)
         {
-            var value = match.Groups[1].Value;
-            parameters[value] = value;
+            var value = matches[i].Groups[1].Value;
+            parameters[$"param{i + 1}"] = value;
         }
         
         return parameters;
