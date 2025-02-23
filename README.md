@@ -42,7 +42,7 @@ The generator will:
 - Recursively search for spec files in the specs directory and its subdirectories
 - By default, generate all test files in the output directory
 - With `-p`, generate test files alongside their corresponding spec files
-- When using `-p` with C#, the namespace will reflect the folder structure (e.g., `YourNamespace.Feature1.SubFeature`)
+- When using `-p` with C#, the namespace will reflect the exact folder structure (e.g., if your folders are `Features/Auth/OAuth`, the namespace will be `YourNamespace.Features.Auth.OAuth`)
 
 ## Examples
 

@@ -143,8 +143,7 @@ public class Program
                 var relativePath = Path.GetRelativePath(opts.SpecsPath, Path.GetDirectoryName(specFile) ?? "");
                 if (relativePath != "." && relativePath != string.Empty)
                 {
-                    var namespaceSuffix = string.Join(".", relativePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                        .Select(ToValidIdentifier));
+                    var namespaceSuffix = string.Join(".", relativePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
                     effectiveNamespace = $"{opts.Namespace}.{namespaceSuffix}";
                 }
             }

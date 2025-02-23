@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Ensure.Examples.xUnit
+namespace Ensure.Examples.xUnit.TestSetup
 {
     public abstract class BackgroundTableTestStepsBase
     {
