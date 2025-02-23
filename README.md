@@ -40,9 +40,9 @@ ensure typescript -s path/to/specs -o path/to/output
 
 The generator will:
 - Recursively search for spec files in the specs directory and its subdirectories
-- By default, generate all test files in the output directory
+- By default, generate all test files in the output directory with namespace `YourNamespace.Generated`
 - With `-p`, generate test files alongside their corresponding spec files
-- When using `-p` with C#, the namespace will reflect the exact folder structure (e.g., if your folders are `Features/Auth/OAuth`, the namespace will be `YourNamespace.Features.Auth.OAuth`)
+- When using `-p` with C#, the namespace will reflect the exact folder structure (e.g., if your folders are `Features/Auth/OAuth`, the namespace will be `YourNamespace.Features.Auth.OAuth` without the `.Generated` suffix)
 
 ## Examples
 

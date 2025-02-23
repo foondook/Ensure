@@ -78,7 +78,9 @@ public class Program
         if (opts.Language.Equals("csharp", StringComparison.OrdinalIgnoreCase) && string.IsNullOrWhiteSpace(opts.Namespace))
         {
             var currentDir = new DirectoryInfo(Directory.GetCurrentDirectory());
-            opts.Namespace = $"{currentDir.Name}.Generated";
+            opts.Namespace = opts.PreserveLocation 
+                ? currentDir.Name 
+                : $"{currentDir.Name}.Generated";
         }
 
         var searchPatterns = new[] { "*.spec", "*.spec.md", "*.md" };

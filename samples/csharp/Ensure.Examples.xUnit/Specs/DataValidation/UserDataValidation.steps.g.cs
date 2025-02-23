@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace Ensure.Examples.xUnit.DataValidation
+namespace Ensure.Examples.DataValidation
 {
     public abstract class UserDataValidationStepsBase
     {
