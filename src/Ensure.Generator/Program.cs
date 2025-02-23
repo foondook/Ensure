@@ -136,6 +136,19 @@ public class Program
                 ? Path.GetDirectoryName(specFile) 
                 : opts.OutputPath;
 
+            // Adjust namespace based on folder structure when using preserve-location
+            var effectiveNamespace = opts.Namespace;
+            if (opts.PreserveLocation && opts.Language.Equals("csharp", StringComparison.OrdinalIgnoreCase))
+            {
+                var relativePath = Path.GetRelativePath(opts.SpecsPath, Path.GetDirectoryName(specFile) ?? "");
+                if (relativePath != "." && relativePath != string.Empty)
+                {
+                    var namespaceSuffix = string.Join(".", relativePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                        .Select(ToValidIdentifier));
+                    effectiveNamespace = $"{opts.Namespace}.{namespaceSuffix}";
+                }
+            }
+
             if (!string.IsNullOrEmpty(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
@@ -143,13 +156,13 @@ public class Program
             
             // Generate Steps interface class
             var stepsPath = Path.Combine(outputDir ?? "", $"{baseFileName}.steps{fileExtension}");
-            var stepsCode = generator.GenerateSteps(spec, opts.Namespace, stepsClassName);
+            var stepsCode = generator.GenerateSteps(spec, effectiveNamespace, stepsClassName);
             await File.WriteAllTextAsync(stepsPath, stepsCode);
             Console.WriteLine($"Generated steps file: {stepsPath}");
             
             // Generate Tests class
             var testsPath = Path.Combine(outputDir ?? "", $"{baseFileName}.tests{fileExtension}");
-            var testCode = generator.GenerateTests(spec, opts.Namespace, baseFileName);
+            var testCode = generator.GenerateTests(spec, effectiveNamespace, baseFileName);
             await File.WriteAllTextAsync(testsPath, testCode);
             Console.WriteLine($"Generated tests file: {testsPath}");
         }

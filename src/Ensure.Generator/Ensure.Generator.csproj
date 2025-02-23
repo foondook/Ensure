@@ -11,7 +11,7 @@
     
     <!-- Package Metadata -->
     <PackageId>Ensure.Generator</PackageId>
-    <Version>0.4.0</Version>
+    <Version>0.4.1</Version>
     <Authors>Vitalii Moiseenko</Authors>
     <Company>Vitalii Moiseenko</Company>
     <Description>A .NET tool for generating test code from markdown specification files.</Description>

@@ -42,6 +42,7 @@ The generator will:
 - Recursively search for spec files in the specs directory and its subdirectories
 - By default, generate all test files in the output directory
 - With `-p`, generate test files alongside their corresponding spec files
+- When using `-p` with C#, the namespace will reflect the folder structure (e.g., `YourNamespace.Feature1.SubFeature`)
 
 ## Examples
 
@@ -181,7 +182,7 @@ To implement the tests, create concrete classes that inherit from the generated 
 ```csharp
 public class LoginFeatureTests : LoginFeatureTestsBase
 {
-    protected override LoginFeatureSteps Steps => new();
+    protected override LoginFeatureStepsBase Steps => new();
 }
 
 public class LoginFeatureSteps : LoginFeatureStepsBase
@@ -250,7 +251,7 @@ export class LoginFeatureTests extends LoginFeatureTestsBase {
 - Automatic parameter extraction from quoted strings
 - No Gherkin/Cucumber syntax - just plain English
 - First-class Playwright support for TypeScript output
-- Proper namespace handling for C# output
+- Proper namespace handling for C# output with folder structure support
 - Recursive spec file search in subdirectories
 - Option to generate test files alongside spec files
 
