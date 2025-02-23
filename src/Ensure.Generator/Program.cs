@@ -25,6 +25,9 @@ public class Program
         [Option('n', "namespace", Required = false, HelpText = "Namespace for generated C# tests")]
         public string Namespace { get; set; } = "";
 
+        [Option('p', "preserve-location", Required = false, HelpText = "Generate test files in the same location as spec files")]
+        public bool PreserveLocation { get; set; } = false;
+
         [Value(0, Required = false, HelpText = "Target language (csharp or typescript)")]
         public string Language { get; set; } = "csharp";
     }
@@ -127,15 +130,25 @@ public class Program
             var stepsClassName = $"{baseFileName}Steps";
             
             var fileExtension = GetFileExtension(opts.Language);
+
+            // Determine output directory - either preserve location or use output path
+            var outputDir = opts.PreserveLocation 
+                ? Path.GetDirectoryName(specFile) 
+                : opts.OutputPath;
+
+            if (!string.IsNullOrEmpty(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
             
             // Generate Steps interface class
-            var stepsPath = Path.Combine(opts.OutputPath, $"{baseFileName}.steps{fileExtension}");
+            var stepsPath = Path.Combine(outputDir ?? "", $"{baseFileName}.steps{fileExtension}");
             var stepsCode = generator.GenerateSteps(spec, opts.Namespace, stepsClassName);
             await File.WriteAllTextAsync(stepsPath, stepsCode);
             Console.WriteLine($"Generated steps file: {stepsPath}");
             
             // Generate Tests class
-            var testsPath = Path.Combine(opts.OutputPath, $"{baseFileName}.tests{fileExtension}");
+            var testsPath = Path.Combine(outputDir ?? "", $"{baseFileName}.tests{fileExtension}");
             var testCode = generator.GenerateTests(spec, opts.Namespace, baseFileName);
             await File.WriteAllTextAsync(testsPath, testCode);
             Console.WriteLine($"Generated tests file: {testsPath}");

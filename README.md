@@ -30,7 +30,18 @@ ensure csharp -s path/to/specs -o path/to/output -n YourNamespace
 
 # For TypeScript
 ensure typescript -s path/to/specs -o path/to/output
+
+# Options:
+# -s, --specs     : Path to specs directory (default: "Specs" for C#, "specs" for TypeScript)
+# -o, --output    : Output directory for generated tests (default: "Generated" for C#, "tests" for TypeScript)
+# -n, --namespace : Namespace for generated C# tests (required for C#)
+# -p, --preserve-location : Generate test files in the same location as spec files
 ```
+
+The generator will:
+- Recursively search for spec files in the specs directory and its subdirectories
+- By default, generate all test files in the output directory
+- With `-p`, generate test files alongside their corresponding spec files
 
 ## Examples
 
@@ -240,6 +251,8 @@ export class LoginFeatureTests extends LoginFeatureTestsBase {
 - No Gherkin/Cucumber syntax - just plain English
 - First-class Playwright support for TypeScript output
 - Proper namespace handling for C# output
+- Recursive spec file search in subdirectories
+- Option to generate test files alongside spec files
 
 ## License
 
